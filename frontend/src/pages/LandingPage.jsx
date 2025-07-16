@@ -137,7 +137,23 @@ const LandingPage = () => {
     </div>
   </div>
 
-  
+  <Modal
+    isOpen={openAuthModal}
+    onClose={()=>{
+      setOpenAuthModal(false);
+      setCurrentPage("login");
+    }}
+    hideHeader
+    >
+    <div>
+     {currentPage == "login" && (
+      <Login setCurrentPage={setCurrentPage} />
+     )}
+      {currentPage == "signup" && (
+      <Signup setCurrentPage={setCurrentPage} />
+      )}
+    </div>
+  </Modal>
 </>
 );
 };
