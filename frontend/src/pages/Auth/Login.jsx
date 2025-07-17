@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Input from "../../components/inputs/Input";
+import { validateEmail } from "../../utils/helper";
 
 const Login = ({ setCurrentPage }) => {
 
@@ -13,6 +14,28 @@ const Login = ({ setCurrentPage }) => {
   //handle login form submission
 const handleLogin = async (e) => {
   e.preventDefault();
+
+  if(!validateEmail(email)){
+    setError("Please enter a valid email address.");
+    return;
+  }
+
+  if(!password){
+    setError("Please enter your password.");
+    return;
+  }
+  setError(null);
+
+  // Perform login logic here
+  try {
+
+  } catch (err) {
+   if (err.response && err.response.data.message) {
+     setError(err.response.data.message);
+   } else {
+     setError("Login failed. Please try again.");
+   }
+  }
 };
 
 
@@ -48,7 +71,7 @@ const handleLogin = async (e) => {
         <button
           type="submit"
           className=" btn-primary "
-          onClick={() => setCurrentPage("signup")}
+          onClick={handleLogin}
         >
           Login
         </button>
