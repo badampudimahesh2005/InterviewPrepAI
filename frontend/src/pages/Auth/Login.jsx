@@ -3,6 +3,9 @@ import { useState } from "react";
 import Input from "../../components/inputs/Input";
 import { validateEmail } from "../../utils/helper";
 
+import axiosInstance from "../../utils/axiosInstance"; 
+import { API_PATHS } from "../../utils/apiPaths";
+
 const Login = ({ setCurrentPage }) => {
 
   const [email, setEmail] = useState('');
@@ -28,6 +31,20 @@ const handleLogin = async (e) => {
 
   // Perform login logic here
   try {
+
+    const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
+      email,
+      password,
+    });
+
+    const {token} = response.data;
+
+    // Store token in localStorage
+    if(token) {
+      localStorage.setItem("token", token);
+      // Redirect to dashboard 
+      navigate("/dashboard");
+    }
 
   } catch (err) {
    if (err.response && err.response.data.message) {
