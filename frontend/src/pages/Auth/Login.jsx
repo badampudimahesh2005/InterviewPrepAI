@@ -1,16 +1,19 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Input from "../../components/inputs/Input";
 import { validateEmail } from "../../utils/helper";
 
 import axiosInstance from "../../utils/axiosInstance"; 
 import { API_PATHS } from "../../utils/apiPaths";
+import { UserContext } from "../../context/userContext";
 
 const Login = ({ setCurrentPage }) => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+
+  const {updateUser} = useContext(UserContext);
 
   const navigate = useNavigate();
 
@@ -42,7 +45,7 @@ const handleLogin = async (e) => {
     // Store token in localStorage
     if(token) {
       localStorage.setItem("token", token);
-      // Redirect to dashboard 
+      updateUser(response.data);
       navigate("/dashboard");
     }
 
