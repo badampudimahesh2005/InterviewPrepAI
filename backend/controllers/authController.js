@@ -33,7 +33,7 @@ const registerUser = async (req, res) => {
             name,
             email,
             password: hashedPassword,
-            profileImageUrl
+            profilePhoto: profileImageUrl || null
         });
         
         res.status(201).json({

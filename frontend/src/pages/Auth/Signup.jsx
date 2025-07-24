@@ -1,8 +1,12 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { useNavigate } from "react-router-dom";
 import Input from "../../components/inputs/Input";
 import ProfilePhotoSelector from "../../components/inputs/ProfilePhotoSelector";
 import { validateEmail } from "../../utils/helper";
+import { UserContext } from "../../context/userContext";
+import axiosInstance from "../../utils/axiosInstance";
+import { API_PATHS } from "../../utils/apiPaths";
+import uploadImage from "../../utils/uploadImage";
 
 const Signup = ({ setCurrentPage }) => {
 
@@ -12,32 +16,61 @@ const Signup = ({ setCurrentPage }) => {
   const [profilePicture, setProfilePicture] = useState('');
   const [error, setError] = useState(null);
 
-  const naviage  = useNavigate();
+  const {updateUser} = useContext(UserContext);
+
+  const navigate = useNavigate();
+
+  const validateData = () => {
+    if(!fullName){
+      setError("Please enter your full name.");
+      return false;
+    }
+    if(!validateEmail(email)){
+      setError("Please enter a valid email address.");
+      return false;
+    }
+    if(!password){
+      setError("Please enter your password.");
+      return false;
+    }
+    setError(null);
+    return true;
+  }
 
   const handleSignup = async (e) => {
     e.preventDefault();
     // Handle signup logic here
     let profileImageUrl = '';
 
-    if(!fullName){
-      setError("Please enter your full name.");
-      return;
-    }
+    if(!validateData()) return;
 
-    if(!validateEmail(email)){
-      setError("Please enter a valid email address.");
-      return;
-    }
-
-    if(!password){
-      setError("Please enter your password.");
-      return;
-    }
-
-    setError(null);
-
-    // Perform signup logic here
+ 
     try {
+
+      if(profilePicture){
+        const imgUploadRes = await uploadImage(profilePicture);
+        console.log("Image uploaded successfully:", imgUploadRes.imageUrl);
+        profileImageUrl = imgUploadRes.imageUrl || '';
+      }
+
+      const userData = {
+        name: fullName,
+        email,
+        password,
+        profileImageUrl,
+      };
+      
+      console.log("Sending signup data:", userData); 
+
+      const response = await axiosInstance.post(API_PATHS.AUTH.SIGNUP, userData);
+
+      const {token} = response.data;
+
+      if(token) {
+        localStorage.setItem("token", token);
+        updateUser(response.data);
+        navigate("/dashboard");
+      }
 
     } catch (err) {
       if (err.response && err.response.data.message) {
