@@ -6,6 +6,10 @@ import { API_PATHS } from '../../utils/apiPaths';
 import axiosInstance from '../../utils/axiosInstance';
 import { CARD_BG } from '../../utils/data';
 import SummaryCard from '../../components/Cards/SummaryCard';
+import CreateSessionForm from './CreateSessionForm';
+import Modal from '../../components/Modal';
+import moment from 'moment'
+import DeleteAlertContent from '../../components/DeleteAlertContent';
 
 
 const Dashboard = () => {
@@ -54,7 +58,7 @@ const Dashboard = () => {
               questions={data?.questions?.length || "-"}
               description={data?.description || ""}
               lastUpdated={
-                data?.updatedAt ? moment(data.updatedAt).formdatat("DD MM YYYY") : ""
+                data?.updatedAt ? moment(data.updatedAt).format("DD MM YYYY") : ""
               }
               onSelect={() => navigate(`/interview-prep/${data?._id}`)}
               onDelete={() => setOpenDeleteAlert({ open: true, data })}
@@ -67,6 +71,17 @@ const Dashboard = () => {
         </button>
 
       </div>
+        <Modal isOpen={openCreateModal} onClose={()=>{setOpenCreateModal(false);}} hideHeader>
+      <div>
+        <CreateSessionForm />
+      </div>
+      </Modal>
+      <Modal isOpen={openDeleteAlert?.open} onClose={()=>{
+        setOpenDeleteAlert({open:false,data:null});
+      }} title="Delete Session" > <div className="w-[30vw]">
+        <DeleteAlertContent content="Are you sure want to delete this session details ?" onDelete={()=> deleteSession(openDeleteAlert.data)}/>
+      </div>
+      </Modal>
 
     </DashboardLayout>
   )
