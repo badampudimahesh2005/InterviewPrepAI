@@ -4,6 +4,8 @@ import moment from 'moment';
 import toast from 'react-hot-toast';
 import RoleInfoHeader from './components/RoleInfoHeader';
 import DashboardLayout from '../../components/layouts/DashboardLayout';
+import axiosInstance from '../../utils/axiosInstance';
+import { API_PATHS } from '../../utils/apiPaths';
 
 
 const InterviewPrep = () => {
@@ -22,7 +24,15 @@ const InterviewPrep = () => {
 
   //Fetch session data by session id
   const fetchSessionDetailById = async () => {
-   
+    try{
+      const responce = await axiosInstance.get(API_PATHS.SESSION.GET_ONE(sessionId));
+      if(responce.data&&responce.data.session) {
+        setSessionData(responce.data.session);
+      }
+    }
+    catch(error) {
+      console.error("Error fetching session details:", error);
+    }
   };
 
   //generate concept explanation
