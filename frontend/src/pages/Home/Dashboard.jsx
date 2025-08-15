@@ -2,6 +2,8 @@ import { useNavigate } from 'react-router-dom'
 import DashboardLayout from '../../components/layouts/DashboardLayout'
 import { useEffect, useState } from 'react';
 import { LuPlus } from 'react-icons/lu'
+import { API_PATHS } from '../../utils/apiPaths';
+import axiosInstance from '../../utils/axiosInstance';
 
 
 const Dashboard = () => {
@@ -17,6 +19,14 @@ const Dashboard = () => {
   });
 
   const fetchAllSessions = async ()=>{
+
+    try{
+      const response=await axiosInstance.get(API_PATHS.SESSION.GET_ALL);
+      setSessions(response.data);
+      console.log(response.data);
+    }catch(error){
+      console.log(error);
+    }
 
   }
 
