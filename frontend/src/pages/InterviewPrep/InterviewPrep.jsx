@@ -50,7 +50,15 @@ const InterviewPrep = () => {
 
   //Pin the question
   const toggleQuestionPinStatus = async (questionId) => {
-   
+   try{
+      const responce =await axiosInstance.post(API_PATHS.QUESTION.PIN(questionId));
+      console.log(responce);
+      if(responce.data&&responce.data.question) {
+        fetchSessionDetailById();
+      }
+    }catch(error){
+      console.error("Errors : ",error);
+    }
   };
 
 //Add more question to the sessions 
