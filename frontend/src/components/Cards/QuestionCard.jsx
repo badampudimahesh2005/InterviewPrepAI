@@ -1,5 +1,6 @@
 import  { useEffect, useRef, useState } from 'react'
 import {LuPinOff,LuPin, LuSparkles, LuChevronDown} from "react-icons/lu"
+import AIResponcePreview from '../../pages/InterviewPrep/components/AIResponcePreview';
 
 
 const QuestionCard = ({question,answer,onLearnMore,isPinned,onTogglePin}) => {
@@ -51,6 +52,7 @@ const QuestionCard = ({question,answer,onLearnMore,isPinned,onTogglePin}) => {
       </div>
       <div className="overflow-hidden transition-all duration-300 ease-in-out" style={{maxHeight: `${height}px`}}>
           <div className="mt-4 text-gray-700 bg-gray-50 px-5 py-3 rounded-lg" ref={contentRef}>
+             <AIResponcePreview content={answer} />
             </div>
         </div>
       </div>

@@ -11,7 +11,9 @@ import RoleInfoHeader from './components/RoleInfoHeader';
 import QuestionCard from '../../components/Cards/QuestionCard';
 
 import { motion, AnimatePresence } from 'framer-motion';
-
+// import Drawer from '../../components/Drawer';
+// import AIResponcePreview from './components/AIResponcePreview';
+// import SkeltonLoader from '../../components/Loader/SkeltonLoader';
 
 
 const InterviewPrep = () => {
@@ -146,7 +148,17 @@ const InterviewPrep = () => {
         </div>
       </div>
 
-               
+                {/* <div className="cc">
+            <Drawer isOpen={openLeanMoreDrawer} onClose={()=>setOpenLeanMoreDrawer(false)} title={!loading && explanation?.title} >
+              {errors && <p className="flex gap-2 text-sm text-amber-600 font-medium"> <LuCircleAlert className='mt-1' /> {errors}</p>}
+              {loading && <SkeltonLoader /> }
+              {
+                !loading && explanation &&(
+                  <AIResponcePreview content={explanation?.explanation} />
+                )
+              }
+            </Drawer>
+          </div> */}
 
 
     </div>
