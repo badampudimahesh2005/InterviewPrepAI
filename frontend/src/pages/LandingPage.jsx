@@ -7,6 +7,7 @@ import Login from '../pages/Auth/Login';
 import Signup from '../pages/Auth/Signup';
 import { UserContext } from '../context/userContext';
 import ProfileInfoCard from '../components/Cards/ProfileInfoCard';
+import hero from '../assets/hero.png';
 
 
 
@@ -87,11 +88,10 @@ const LandingPage = () => {
         <div>
           <section className="flex items-center justify-center -mt-36">
         <img 
-        src=""
+        src={hero}
         alt="Hero Image"
         className='w-[80vw] rounded-lg'
          />
-        <p>This is a description of the image.</p>
       </section>
         </div>
 

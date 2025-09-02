@@ -11,9 +11,9 @@ import RoleInfoHeader from './components/RoleInfoHeader';
 import QuestionCard from '../../components/Cards/QuestionCard';
 
 import { motion, AnimatePresence } from 'framer-motion';
-// import Drawer from '../../components/Drawer';
-// import AIResponcePreview from './components/AIResponcePreview';
-// import SkeltonLoader from '../../components/Loader/SkeltonLoader';
+import Drawer from '../../components/Drawer';
+import AIResponcePreview from './components/AIResponcePreview';
+import SkeletonLoader from '../../components/loader/SkeltonLoader';
 
 
 const InterviewPrep = () => {
@@ -45,14 +45,30 @@ const InterviewPrep = () => {
 
   //generate concept explanation
   const generateConceptExplanation = async (question) => {
-    
+     try{
+        setErrors("");
+        setExplanation(null);
+        setLoading(true);
+        setOpenLeanMoreDrawer(true);
+        const responce =await axiosInstance.post(API_PATHS.AI.GENERATE_EXPLANATION,{
+          question,
+        });
+        if(responce.data){
+          setExplanation(responce.data);
+        }
+      }catch(error) {
+        setExplanation(null);
+        setErrors("Failed to generate explanation,try again.");
+        console.error("Error fetching session details:", error);
+      }finally{
+        setLoading(false);
+      }
   };
 
   //Pin the question
   const toggleQuestionPinStatus = async (questionId) => {
    try{
       const responce =await axiosInstance.post(API_PATHS.QUESTION.PIN(questionId));
-      console.log(responce);
       if(responce.data&&responce.data.question) {
         fetchSessionDetailById();
       }
@@ -63,7 +79,35 @@ const InterviewPrep = () => {
 
 //Add more question to the sessions 
   const uploadMoreQuestions = async () => {
-  
+   try{
+      setIsUpdateLoader(true);
+      const aiResponce= await axiosInstance.post(API_PATHS.AI.GENERATE_QUESTIONS,{
+        role: sessionData?.role,
+        experience: sessionData?.experience,
+        topicsToFocus: sessionData?.topicsToFocus,
+        numberOfQuestions: 10,
+      });
+
+      const generatedQuestions = aiResponce.data;
+      const responce = await axiosInstance.post(API_PATHS.QUESTION.ADD_TO_SESSION,{
+        sessionId,
+        questions: generatedQuestions,
+      });
+      if(responce.data){
+        toast.success("Addes More Q&A !!");
+        fetchSessionDetailById();
+      }
+
+    }catch(error){
+      if(error.response && error.response.data.message) {
+        setErrors(error.response.data.message);
+      }
+      else {
+        setErrors("Something went wrong . Please try again.");
+      }
+    }finally{
+      setIsUpdateLoader(false);
+    }
   };
 
 
@@ -156,17 +200,18 @@ const InterviewPrep = () => {
         </div>
       </div>
 
-                {/* <div className="cc">
+                <div className="cc">
             <Drawer isOpen={openLeanMoreDrawer} onClose={()=>setOpenLeanMoreDrawer(false)} title={!loading && explanation?.title} >
               {errors && <p className="flex gap-2 text-sm text-amber-600 font-medium"> <LuCircleAlert className='mt-1' /> {errors}</p>}
-              {loading && <SkeltonLoader /> }
+
+              {loading && <SkeletonLoader /> }
               {
                 !loading && explanation &&(
                   <AIResponcePreview content={explanation?.explanation} />
                 )
               }
             </Drawer>
-          </div> */}
+          </div>
 
 
     </div>

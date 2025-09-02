@@ -10,6 +10,7 @@ import CreateSessionForm from './CreateSessionForm';
 import Modal from '../../components/Modal';
 import moment from 'moment'
 import DeleteAlertContent from '../../components/DeleteAlertContent';
+import toast from 'react-hot-toast';
 
 
 const Dashboard = () => {
@@ -38,6 +39,16 @@ const Dashboard = () => {
 
   const deleteSession = async (sessionData) => {
 
+      try{
+      const response=await axiosInstance.delete(API_PATHS.SESSION.DELETE(sessionData?._id));
+      if(response.data){
+        toast.success("Session deleted successfully");
+        setOpenDeleteAlert({open:false,data:null});
+        fetchAllSessions();
+      }
+    }catch(error){
+      console.error("Error deleting session data: ",error);
+    }
   };
 
   useEffect(() => {
